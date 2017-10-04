@@ -18,7 +18,7 @@ class InvoiceForm(forms.ModelForm):
     sales_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control datepicker'}))
     payment_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control datepicker'}))
     status = forms.ModelChoiceField(queryset=Code.objects.all().filter(entity='INVOICE', schema='STATUS'), widget= forms.Select(attrs={'class': 'select2' }))
-    additional_address_ind = forms.ChoiceField(label='Additional Address', choices=BOOLEAN_OPTION, widget= forms.Select(attrs={'class': 'form-control','id':'additional-address', }))
+    additional_address_ind = forms.ChoiceField(label='Additional Address', choices=BOOLEAN_OPTION, widget= forms.Select(attrs={'class': 'select2' }))
     company = forms.ModelChoiceField(queryset = Organization.objects.all().filter(org_type__name='Company'), widget=forms.Select(attrs={'class':'select2'}))
     customer = forms.ModelChoiceField(queryset = Organization.objects.all().filter(org_type__name='Customer'), widget=forms.Select(attrs={'class':'select2'}))
     literal_value = forms.CharField(widget= forms.Textarea(attrs={'class': 'form-control',}))
