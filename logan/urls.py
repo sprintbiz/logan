@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^event/edit/(?P<id>\w+)/$', EventEdit.as_view()),
     url(r'^calendar/json/event/$', CalendarResponce.as_view()),
     url(r'^json/daysnotfilled/$', JsonDaysNotFilled.as_view()),
+    url(r'^login', auth_views.login, {'template_name': 'login.html','authentication_form': LoginForm}, name='login'),
     url(r'^login/$', auth_views.login, {'template_name': 'login.html','authentication_form': LoginForm}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': 'dashboard'}, name='logout'),
     url(r'^group/create/$', GroupCreateView.as_view(), name='group-create'),
