@@ -50,10 +50,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'logan.urls'
-
+LOGIN_URL ='/login/'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -69,6 +70,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'fixtures'),
+    '/fixtures/',
 ]
 
 WSGI_APPLICATION = 'logan.wsgi.application'
@@ -122,5 +128,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
+STATIC_ROOT = ''
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = ( os.path.join('static'), )
