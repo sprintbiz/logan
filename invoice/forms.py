@@ -19,13 +19,12 @@ class InvoiceForm(forms.ModelForm):
     payment_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control datepicker'}))
     status = forms.ModelChoiceField(queryset=Code.objects.all().filter(entity='INVOICE', schema='STATUS'), widget= forms.Select(attrs={'class': 'select2' }))
     additional_address_ind = forms.ChoiceField(label='Additional Address', choices=BOOLEAN_OPTION, widget= forms.Select(attrs={'class': 'select2' }))
-    company = forms.ModelChoiceField(queryset = Organization.objects.all().filter(org_type__name='Company'), widget=forms.Select(attrs={'class':'select2'}))
-    customer = forms.ModelChoiceField(queryset = Organization.objects.all().filter(org_type__name='Customer'), widget=forms.Select(attrs={'class':'select2'}))
-    literal_value = forms.CharField(widget= forms.Textarea(attrs={'class': 'form-control',}))
+    company = forms.ModelChoiceField(queryset = Organization.objects.all().filter(is_owner=1), widget=forms.Select(attrs={'class':'select2'}))
+    customer = forms.ModelChoiceField(queryset = Organization.objects.all().filter(is_customer=1), widget=forms.Select(attrs={'class':'select2'}))
     payment_method = forms.ModelChoiceField(queryset=Code.objects.all().filter(entity='INVOICE', schema='PAYMENT_METHOD'), widget= forms.Select(attrs={'class': 'select2' }))
     class Meta:
         model = Invoice
-        fields = ['id','name', 'type', 'create_date', 'payment_date','sales_date','status','additional_address_ind','company','customer', 'literal_value','payment_method']
+        fields = ['id','name', 'type', 'create_date', 'payment_date','sales_date','status','additional_address_ind','company','customer', 'payment_method']
 
 class InvoiceServiceForm(forms.ModelForm):
     quantity = forms.CharField(required =False, widget= forms.TextInput(attrs={'class': 'form-control',}))
@@ -72,13 +71,20 @@ class TaxForm(forms.ModelForm):
         model = Tax
         fields = ['name','value']
 
+class UnitForm(forms.ModelForm):
+    code = forms.CharField(required =True, label='Code', widget= forms.TextInput(attrs={'class': 'form-control','id':'unit-code', }))
+    name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'unit-name', }))
+    class Meta:
+        model = Unit
+        fields = ['code','name']
+
 class MaterialForm(forms.ModelForm):
     name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'material-name', }))
     unit = forms.ModelChoiceField(queryset = Unit.objects.all() , label='Unit', widget= forms.Select(attrs={'class': 'select','id':'material-unit', }))
     tax = forms.ModelChoiceField(queryset = Tax.objects.all() , label='Tax', widget= forms.Select(attrs={'class': 'select','id':'material-tax', }))
     group = forms.ModelChoiceField(queryset = Material_Group.objects.all().exclude(parrent__isnull=True) , label='Group', widget= forms.Select(attrs={'class': 'select','id':'material-group', }))
     manufacturer = forms.ModelChoiceField(required =False, queryset = Manufacturer.objects.all() , label='Manufacturer', widget= forms.Select(attrs={'class': 'select','id':'material-manufacturer', }))
-    dealer = forms.ModelChoiceField(required =False, queryset = Organization.objects.filter(org_type__type = 'DEAL') , label='Dealer', widget= forms.Select(attrs={'class': 'select','id':'material-dealer', }))
+    dealer = forms.ModelChoiceField(required =False, queryset = Organization.objects.filter(is_dealer=1) , label='Dealer', widget= forms.Select(attrs={'class': 'select','id':'material-dealer', }))
     price = forms.DecimalField(required =False, label='Price', widget= forms.NumberInput(attrs={'class': 'form-control','id':'material-price', }))
     class Meta:
         model = Material
@@ -114,23 +120,18 @@ class OrganizationForm(forms.ModelForm):
                 (-1, "N/A"),
                 )
     name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-name', }))
-    street_name = forms.CharField(required =False, label='Street Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-street-name', }))
-    street_number = forms.CharField(required =False, label='Street Number', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-street-number', }))
-    zip_code = forms.CharField(required =False, label='Zip Code', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-zip-code', }))
-    city = forms.CharField(required =False, label='City', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-city', }))
-    country = forms.CharField(required =False, label='Country', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-country', }))
+    address = forms.ModelChoiceField(required =False, label='Address', widget= forms.Select(attrs={'class': 'select','id':'organization-code', }), queryset=Address.objects.all() )
     phone = forms.CharField(required =False, label='Phone', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-phone', }))
     email = forms.CharField(required =False, label='Email', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-email', }))
     org_nbr_1 = forms.CharField(required =False, label='NIP', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-org-nbr-1', }))
     org_nbr_2 = forms.CharField(required =False, label='REGON', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-org-nbr-2', }))
-    org_type = forms.ModelChoiceField(required =False, label='Code', widget= forms.Select(attrs={'class': 'select','id':'organization-code', }), queryset=Code.objects.all().filter(entity='ORGANIZATION') )
     is_owner =  forms.NullBooleanField(required =False, widget= forms.CheckboxInput(attrs={'class': 'checkbox','id':'is_owner', }))
     is_customer = forms.NullBooleanField(required =False, widget= forms.CheckboxInput(attrs={'class': 'checkbox'}))
     is_dealer = forms.NullBooleanField(required =False, widget= forms.CheckboxInput(attrs={'class': 'checkbox','id':'is_dealer', }))
     is_manufacturer = forms.NullBooleanField(required =False, widget= forms.CheckboxInput(attrs={'class': 'checkbox','id':'is_manufacturer', }))
     class Meta:
         model = Organization
-        fields = ['name','street_name','street_number','zip_code','city','country','phone','email','org_nbr_1','org_nbr_2','org_type','is_owner','is_customer','is_dealer','is_manufacturer']
+        fields = ['name','address','phone','email','org_nbr_1','org_nbr_2','is_owner','is_customer','is_dealer','is_manufacturer']
 
 class AddressForm(forms.ModelForm):
 
@@ -156,8 +157,9 @@ class AddressForm(forms.ModelForm):
 
 class ProjectForm(forms.ModelForm):
     name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'project-name', }))
-    customer = forms.ModelChoiceField(queryset = Organization.objects.all().filter(org_type__type='CUST') , label='Customer', widget= forms.Select(attrs={'class': 'form-control','id':'project-customer', }))
+    customer = forms.ModelChoiceField(queryset = Organization.objects.all().filter(is_customer=1) , label='Customer', widget= forms.Select(attrs={'class': 'form-control','id':'project-customer', }))
     code = forms.CharField(required =True, label='Code', widget= forms.TextInput(attrs={'class': 'form-control','id':'project-code', }))
+
     class Meta:
         model = Project
         fields = ['name','code','customer']
@@ -166,23 +168,12 @@ class ProjectForm(forms.ModelForm):
 class ServiceForm(forms.ModelForm):
     name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'service-name', }))
     tax = forms.ModelChoiceField(queryset = Tax.objects.all() , label='Tax', widget= forms.Select(attrs={'class': 'form-control','id':'service-tax', }))
-    price_per_hour = forms.DecimalField(required =False, label='Price Per Hour', widget= forms.TextInput(attrs={'class': 'form-control','id':'service-price-per-hour', }))
-    fixed_price = forms.DecimalField(required =False, label='Fixed Price', widget= forms.TextInput(attrs={'class': 'form-control','id':'service-fixed-price', }))
-    def clean(self):
-        cleaned_data = super(ServiceForm, self).clean()
-        price_per_hour = cleaned_data.get("price_per_hour")
-        fixed_price = cleaned_data.get("fixed_price")
-        if price_per_hour and fixed_price:
-            raise forms.ValidationError(
-                {
-                    'price_per_hour': ["Only one price can be set"],
-                    'fixed_price': ["Only one price can be set"]
-                }
-            )
-        return cleaned_data
+    unit = forms.ModelChoiceField(queryset = Unit.objects.all() , label='Unit', widget= forms.Select(attrs={'class': 'form-control','id':'service-unit', }))
+    unit_price = forms.DecimalField(required =False, label='Unit Price', widget= forms.TextInput(attrs={'class': 'form-control','id':'service-unit-price', }))
+
     class Meta:
         model = Service
-        fields = ['name','tax','price_per_hour','fixed_price']
+        fields = ['name','tax','unit','unit_price']
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Email', 'aria-describedby' : 'basic-addon1'}))

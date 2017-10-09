@@ -20,7 +20,7 @@ class Code(models.Model):
         verbose_name = 'Code'
         verbose_name_plural = 'Codes'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -37,7 +37,7 @@ class Tax (models.Model):
         verbose_name = 'Tax'
         verbose_name_plural = 'Taxes'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -68,7 +68,7 @@ class Address (models.Model):
         verbose_name = 'Address'
         verbose_name_plural = 'Addresses'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -79,16 +79,10 @@ class Organization (models.Model):
     id = models.AutoField(primary_key=True)
     address = models.ForeignKey(Address)
     name = models.CharField(max_length=200)
-    street_name = models.CharField(max_length=200, blank=True)
-    street_number = models.CharField(max_length=10, blank=True)
-    zip_code = models.CharField(max_length=60, blank=True)
-    city = models.CharField(max_length=200, blank=True)
-    country = models.CharField(max_length=200, blank=True)
     phone = models.CharField(max_length=15, blank=True)
     email = models.CharField(max_length=200, blank=True)
     org_nbr_1 = models.CharField(max_length=30, blank=True)
     org_nbr_2 = models.CharField(max_length=30, blank=True)
-    org_type = models.ForeignKey(Code)
     bank_account = models.CharField(max_length=40, blank=True)
     is_owner = models.NullBooleanField()
     is_customer = models.NullBooleanField()
@@ -101,7 +95,7 @@ class Organization (models.Model):
         verbose_name = 'Organization'
         verbose_name_plural = 'Organization'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -120,7 +114,7 @@ class Project(models.Model):
         verbose_name = 'Projects'
         verbose_name_plural = 'Projects'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -136,7 +130,7 @@ class Unit(models.Model):
         verbose_name = 'Unit'
         verbose_name_plural = 'Units'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Warehouse(models.Model):
@@ -148,7 +142,7 @@ class Warehouse(models.Model):
         verbose_name = 'Warehouse'
         verbose_name_plural = 'Warehouses'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Invoice (models.Model):
@@ -163,7 +157,6 @@ class Invoice (models.Model):
     company = models.ForeignKey(Organization, related_name='organization_company')
     customer = models.ForeignKey(Organization, related_name='organization_customer')
     payment_method = models.ForeignKey(Code, related_name='invoice_payment_method')
-    literal_value = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -175,7 +168,7 @@ class Invoice (models.Model):
         verbose_name = 'Invoice'
         verbose_name_plural = 'Invoices'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
@@ -194,7 +187,7 @@ class Material_Group (models.Model):
         verbose_name = 'Material Group'
         verbose_name_plural = 'Material Groups'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -210,7 +203,7 @@ class Manufacturer (models.Model):
         verbose_name = 'Manufacturer'
         verbose_name_plural = 'Manufacturers'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -232,7 +225,7 @@ class Material (models.Model):
         verbose_name = 'Material'
         verbose_name_plural = 'Materials'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -242,8 +235,8 @@ class Service (models.Model):
     id = models.AutoField(primary_key=True)
     tax = models.ForeignKey(Tax, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    price_per_hour  = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    fixed_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    unit_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -251,7 +244,7 @@ class Service (models.Model):
         verbose_name = 'Service'
         verbose_name_plural = 'Service'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -297,7 +290,7 @@ class Event(models.Model):
         verbose_name = 'Events'
         verbose_name_plural = 'Events'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -318,7 +311,7 @@ class Material_Transactions(models.Model):
         verbose_name = 'Material Transaction'
         verbose_name_plural = 'Material Transactions'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):

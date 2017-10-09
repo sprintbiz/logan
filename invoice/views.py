@@ -2,8 +2,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import View, UpdateView
 from django.shortcuts import render, get_object_or_404,redirect
-from invoice.forms import AddressForm, CreateUserForm, invoice_material_formset,invoice_service_formset, EventForm, ManufacturerForm, MaterialForm, MaterialGroupForm, MaterialTransactionForm, OrganizationForm, PasswordChangeCustomForm, ProjectForm, ServiceForm, InvoiceForm, TaxForm, UserForm, GroupForm, PermissionForm
-from invoice.models import Address, Event, Invoice, Invoice_Material, Invoice_Service, Manufacturer, Material, Material_Group, Material_Transactions, Organization, Project, Service, Tax, Warehouse
+from invoice.forms import AddressForm, CreateUserForm, invoice_material_formset,invoice_service_formset, EventForm, ManufacturerForm, MaterialForm, MaterialGroupForm, MaterialTransactionForm, OrganizationForm, PasswordChangeCustomForm, ProjectForm, ServiceForm, InvoiceForm, TaxForm, UserForm, GroupForm, PermissionForm, UnitForm
+from invoice.models import Address, Event, Invoice, Invoice_Material, Invoice_Service, Manufacturer, Material, Material_Group, Material_Transactions, Organization, Project, Service, Tax, Warehouse, Unit
 
 from django.contrib.auth.models import User, Group, Permission
 from django.forms import extras, inlineformset_factory
@@ -29,6 +29,7 @@ from django.utils import timezone
 from django.db import connection
 from itertools import chain
 import math
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class RedirectView(View):
     def get(self, request):
@@ -47,13 +48,13 @@ class Dashboard(View):
 
         return render(request, 'dashboard.html', params)
 
-class InvoiceListView(ListView):
+class InvoiceListView(LoginRequiredMixin, ListView):
     title = 'Invoice List';
     model = Invoice      # shorthand for setting queryset = models.Car.objects.all()
     template_name = 'invoice.html'  # optional (the default is app_name/modelNameInLowerCase_list.html; which will look into your templates folder for that path and file)
     context_object_name = 'invoices'    #default is object_list as well as model's_verbose_name_list and/or model's_verbose_name_plural_list, if defined in the model's inner Meta class
 
-class InvoicePrintView(View):
+class InvoicePrintView(LoginRequiredMixin, View):
     def get(self, request, id):
         invoice_object = Invoice.objects.get(id=id)
         invoicem_service = Invoice_Service.objects.filter(invoice_id=id).annotate(service_name=F('service__name')
@@ -146,7 +147,7 @@ class InvoicePrintView(View):
                                                     }
                     )
 
-class InvoiceEditView(UpdateView):
+class InvoiceEditView(LoginRequiredMixin, UpdateView):
     action_url =''
     form_class = InvoiceForm
     model = Invoice
@@ -202,7 +203,7 @@ class InvoiceEditView(UpdateView):
                                   invoice_service=invoice_service_form,
                                   invoice_material=invoice_material_form))
 
-class CreateInvoiceView(CreateView):
+class CreateInvoiceView(LoginRequiredMixin, CreateView):
     action_url = '/invoice/new/'
     form_class = InvoiceForm
     model = Invoice
@@ -566,6 +567,46 @@ class TaxDetail(DetailView):
         context['now'] = timezone.now()
         return context
 
+class UnitList(ListView):
+    title = 'Unit List'
+    template_name = 'unit_list.html'
+    model = Unit
+    form_class = UnitForm
+
+class UnitCreate(SuccessMessageMixin, CreateView):
+    title = 'Unit Create'
+    template_name = 'unit_create.html'
+    model = Unit
+    form_class = UnitForm
+    success_message = "%(name)s was created successfully"
+    def get_success_url(self):
+        return reverse('unit-list')
+
+class UnitEdit(UpdateView):
+    title = 'Unit Edit'
+    template_name = 'unit_edit.html'
+    model = Unit
+    form_class = UnitForm
+
+class UnitDelete(DeleteView):
+    title = 'Unit Delete'
+    template_name = 'unit_confirm_delete.html'
+    model = Unit
+    success_url = reverse_lazy('unit-list')
+    success_message = "Unit was deleted successfully"
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(UnitDelete, self).delete(request, *args, **kwargs)
+
+class UnitDetail(DetailView):
+    title = 'Unit Detail'
+    template_name = 'unit_detail.html'
+    model = Unit
+    def get_context_data(self, **kwargs):
+        context = super(UnitDetail, self).get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
+
 class AddressList(ListView):
     title = 'Address List'
     template_name = 'address_list.html'
@@ -580,6 +621,31 @@ class AddressCreate(SuccessMessageMixin, CreateView):
     success_message = "%(name)s was created successfully"
     def get_success_url(self):
         return reverse('address-list')
+
+class AddressEdit(UpdateView):
+    title = 'Address Edit'
+    template_name = 'address_edit.html'
+    model = Address
+    form_class = AddressForm
+
+class AddressDelete(DeleteView):
+    title = 'Address Delete'
+    template_name = 'address_confirm_delete.html'
+    model = Address
+    success_url = reverse_lazy('address-list')
+    success_message = "Address was deleted successfully"
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(AddressDelete, self).delete(request, *args, **kwargs)
+
+class AddressDetail(DetailView):
+    title = 'Address Detail'
+    template_name = 'address_detail.html'
+    model = Address
+    def get_context_data(self, **kwargs):
+        context = super(AddressDetail, self).get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
 
 class OrganizationList(ListView):
     title = 'Organization List'
