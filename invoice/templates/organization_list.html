@@ -36,14 +36,9 @@
             <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Street Name</th>
-                  <th>Street Number</th>
-                  <th>Zip Code</th>
-                  <th>City</th>
-                  <th>Country</th>
                   <th>Phone</th>
                   <th>Email</th>
-                  <th>Code</th>
+                  <th>NIP</th>
                   <th></th>
                   <th></th>
                 </tr>
@@ -52,14 +47,9 @@
               {% for organization in object_list %}
                 <tr>
                   <th scope="row"><a href="{% url 'organization-edit' organization.id %}">{{ organization.name }}</a></th>
-                  <td>{{ organization.street_name }}</td>
-                  <td>{{ organization.street_number }}</td>
-                  <td>{{ organization.zip_code }}</td>
-                  <td>{{ organization.city }}</td>
-                  <td>{{ organization.country }}</td>
                   <td>{{ organization.phone }}</td>
                   <td>{{ organization.email }}</td>
-                  <td>{{ organization.code }}</td>
+                  <td>{{ organization.org_nbr_1 }}</td>
                   <td><a href="{% url 'organization-delete' organization.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                   <td><a href="{% url 'organization-detail' organization.id %}"><i class="fa fa-info" aria-hidden="true"></i></a></td>
                 </tr>
