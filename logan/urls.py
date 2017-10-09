@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from invoice.views import AddressCreate, AddressList, ProjectCreate, ProjectDelete, ProjectDetail, ProjectEdit, ProjectList, ServiceCreate, ServiceDelete, ServiceDetail, ServiceEdit, ServiceList, ManufacturerList, ManufacturerCreate, MaterialList, MaterialCreate, MaterialDelete, MaterialEdit, MaterialDetail, MaterialGroupCreate, MaterialGroupDelete, MaterialGroupDetail, MaterialGroupEdit, MaterialGroupList, MaterialTransactionDelete, MaterialTransactionEdit, MaterialTransactionList, OrganizationDetail, OrganizationEdit, OrganizationDelete, OrganizationCreate, OrganizationList, TaxDetail, TaxDelete, TaxList, TaxCreate, TaxEdit, JsonDaysNotFilled, EventEdit, EventCreate, EventList, JsonProject, CalendarResponce, RedirectView, Dashboard, InvoiceListView, InvoicePrintView, CreateInvoiceView, InvoiceEditView, TimescheetView, ProfileView, ProfileChangePassword, ProfileCreateView, ProfileList, ProfileDelete, GroupCreateView
+from invoice.views import AddressCreate, AddressDelete, AddressDetail, AddressEdit, AddressList, ProjectCreate, ProjectDelete, ProjectDetail, ProjectEdit, ProjectList, ServiceCreate, ServiceDelete, ServiceDetail, ServiceEdit, ServiceList, ManufacturerList, ManufacturerCreate, MaterialList, MaterialCreate, MaterialDelete, MaterialEdit, MaterialDetail, MaterialGroupCreate, MaterialGroupDelete, MaterialGroupDetail, MaterialGroupEdit, MaterialGroupList, MaterialTransactionDelete, MaterialTransactionEdit, MaterialTransactionList, OrganizationDetail, OrganizationEdit, OrganizationDelete, OrganizationCreate, OrganizationList, TaxDetail, TaxDelete, TaxList, TaxCreate, TaxEdit, JsonDaysNotFilled, EventEdit, EventCreate, EventList, JsonProject, CalendarResponce, RedirectView, Dashboard, InvoiceListView, InvoicePrintView, CreateInvoiceView, InvoiceEditView, TimescheetView, ProfileView, ProfileChangePassword, ProfileCreateView, ProfileList, ProfileDelete, GroupCreateView, UnitList, UnitCreate, UnitEdit, UnitDelete, UnitDetail
 admin.autodiscover()
 
 from invoice.forms import LoginForm
@@ -56,6 +56,9 @@ urlpatterns = [
     url(r'^material_transaction/edit/(?P<pk>\w+)/$', MaterialTransactionEdit.as_view(), name='material-transaction-edit'),
     url(r'^address/$', AddressList.as_view(), name='address-list'),
     url(r'^address/create/$', AddressCreate.as_view(), name='address-create'),
+    url(r'^address/delete/(?P<pk>\w+)/$', AddressDelete.as_view(), name='address-delete'),
+    url(r'^address/detail/(?P<pk>\w+)/$', AddressDetail.as_view(), name='address-detail'),
+    url(r'^address/edit/(?P<pk>\w+)/$', AddressEdit.as_view(), name='address-edit'),
     url(r'^organization/$', OrganizationList.as_view(), name='organization-list'),
     url(r'^organization/create/$', OrganizationCreate.as_view(), name='organization-create'),
     url(r'^organization/edit/(?P<pk>\w+)/$', OrganizationEdit.as_view(), name='organization-edit'),
@@ -76,5 +79,10 @@ urlpatterns = [
     url(r'^tax/delete/(?P<pk>\w+)/$', TaxDelete.as_view(), name='tax-delete'),
     url(r'^tax/detail/(?P<pk>\w+)/$', TaxDetail.as_view(), name='tax-detail'),
     url(r'^tax/edit/(?P<pk>\w+)/$', TaxEdit.as_view(), name='tax-edit'),
+    url(r'^unit/$', UnitList.as_view(), name='unit-list'),
+    url(r'^unit/create/$', UnitCreate.as_view(), name='unit-create'),
+    url(r'^unit/delete/(?P<pk>\w+)/$', UnitDelete.as_view(), name='unit-delete'),
+    url(r'^unit/detail/(?P<pk>\w+)/$', UnitDetail.as_view(), name='unit-detail'),
+    url(r'^unit/edit/(?P<pk>\w+)/$', UnitEdit.as_view(), name='unit-edit'),
     url(r'^.*$', RedirectView.as_view(), name='home'),
 ]
