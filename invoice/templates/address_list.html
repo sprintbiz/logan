@@ -49,19 +49,19 @@
                 </tr>
             </thead>
             <tbody>
-              {% for organization in object_list %}
+              {% for address in object_list %}
                 <tr>
-                  <th scope="row"><a href="{% url 'organization-edit' organization.id %}">{{ organization.name }}</a></th>
-                  <td>{{ organization.street_name }}</td>
-                  <td>{{ organization.street_number }}</td>
-                  <td>{{ organization.zip_code }}</td>
-                  <td>{{ organization.city }}</td>
-                  <td>{{ organization.country }}</td>
-                  <td>{{ organization.phone }}</td>
-                  <td>{{ organization.email }}</td>
-                  <td>{{ organization.code }}</td>
-                  <td><a href="{% url 'organization-delete' organization.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                  <td><a href="{% url 'organization-detail' organization.id %}"><i class="fa fa-info" aria-hidden="true"></i></a></td>
+                  <th scope="row"><a href="{% url 'address-edit' address.id %}">{{ address.name }}</a></th>
+                  <td>{{ address.street_name }}</td>
+                  <td>{{ address.street_number }}</td>
+                  <td>{{ address.zip_code }}</td>
+                  <td>{{ address.city }}</td>
+                  <td>{{ address.country }}</td>
+                  <td>{{ address.phone }}</td>
+                  <td>{{ address.email }}</td>
+                  <td>{{ address.code }}</td>
+                  <td><a href="{% url 'address-delete' address.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                  <td><a href="{% url 'address-detail' address.id %}"><i class="fa fa-info" aria-hidden="true"></i></a></td>
                 </tr>
                 </tr>
               {% endfor %}
