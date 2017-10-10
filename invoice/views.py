@@ -30,6 +30,7 @@ from django.db import connection
 from itertools import chain
 import math
 from django.contrib.auth.mixins import LoginRequiredMixin
+from invoice.val2text import *
 
 class RedirectView(View):
     def get(self, request):
@@ -58,15 +59,12 @@ class InvoicePrintView(LoginRequiredMixin, View):
     def get(self, request, id):
         invoice_object = Invoice.objects.get(id=id)
         invoicem_service = Invoice_Service.objects.filter(invoice_id=id).annotate(service_name=F('service__name')
-		                                                       ,price_per_hour=ExpressionWrapper( Coalesce(F('service__price_per_hour'), F('service__fixed_price') ), output_field=FloatField() )
-															   ,value=ExpressionWrapper(Coalesce(F('service__price_per_hour') * F('quantity'), F('service__fixed_price') * F('quantity')), output_field=FloatField())
-															   ,tax_value=ExpressionWrapper( Coalesce((F('service__price_per_hour') * F('quantity'))*F('service__tax__value')/100, (F('service__fixed_price') * F('quantity'))*F('service__tax__value')/100), output_field=FloatField() )
+		                                                       ,price_per_hour=ExpressionWrapper( F('service__unit_price'), output_field=FloatField() )
+															   ,value=ExpressionWrapper(F('service__unit_price') * F('quantity'), output_field=FloatField())
+															   ,tax_value=ExpressionWrapper( (F('service__unit_price') * F('quantity'))*F('service__tax__value')/100, output_field=FloatField() )
                                                                ,tax_prct=F('service__tax__value')
 															   ,gross_value=ExpressionWrapper(
-                                                                   Coalesce (
-                                                                       (F('service__price_per_hour') * F('quantity'))+(F('service__price_per_hour') * F('quantity'))*F('service__tax__value')/100,
-                                                                       (F('service__fixed_price') * F('quantity'))+(F('service__fixed_price') * F('quantity'))*F('service__tax__value')/100
-                                                                   ), output_field=FloatField()
+                                                                   (F('service__unit_price') * F('quantity'))+(F('service__unit_price') * F('quantity'))*F('service__tax__value')/100, output_field=FloatField()
                                                                )
 															   )
         invoicem_material = Invoice_Material.objects.filter(invoice_id=id).annotate(service_name=F('material__name')
@@ -80,22 +78,15 @@ class InvoicePrintView(LoginRequiredMixin, View):
         invoice_detail_object = chain(invoicem_material, invoicem_service)
         invoice_service_total = Invoice_Service.objects.filter(invoice_id=id).aggregate(
             total_tax=Sum(
-                Coalesce (
-                    (F('service__price_per_hour') * F('quantity'))*F('service__tax__value')/100,
-                    (F('service__fixed_price') * F('quantity'))*F('service__tax__value')/100
-                ), output_field=FloatField()
+                (F('service__unit_price') * F('quantity'))*F('service__tax__value')/100, output_field=FloatField()
             ),
             total_net=Sum(
-                Coalesce (
-                    F('service__price_per_hour') * F('quantity'),
-                    F('service__fixed_price') * F('quantity')
-                ), output_field=FloatField()
+                    F('service__unit_price') * F('quantity')
+                , output_field=FloatField()
             ),
             total_gross=Sum(
-                Coalesce (
-                    (F('service__price_per_hour') * F('quantity'))*F('service__tax__value')/100+F('service__price_per_hour') * F('quantity'),
-                    (F('service__fixed_price') * F('quantity'))*F('service__tax__value')/100+F('service__fixed_price') * F('quantity'),
-                ), output_field=FloatField()
+                    (F('service__unit_price') * F('quantity'))*F('service__tax__value')/100+F('service__unit_price') * F('quantity')
+                , output_field=FloatField()
             )
         )
         invoice_material_total = Invoice_Material.objects.filter(invoice_id=id).aggregate(
