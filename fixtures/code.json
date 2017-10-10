@@ -1,0 +1,145 @@
+[
+  {
+    "model": "invoice.code",
+    "pk": 1,
+    "fields": {
+      "name": "Created",
+      "type": "CREA",
+      "parrent": 0,
+      "entity": "INVOICE",
+      "schema":"STATUS",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 2,
+    "fields": {
+      "name": "Paid",
+      "type": "PAID",
+      "parrent": 0,
+      "entity": "INVOICE",
+      "schema":"STATUS",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 3,
+    "fields": {
+      "name": "Customer",
+      "type": "CUST",
+      "parrent": 0,
+      "entity": "ORGANIZATION",
+      "schema":"TYPE",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 4,
+    "fields": {
+      "name": "Company",
+      "type": "COMP",
+      "parrent": 0,
+      "entity": "ORGANIZATION",
+      "schema":"TYPE",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 5,
+    "fields": {
+      "name": "Przelew",
+      "type": "TRAN",
+      "parrent": 0,
+      "entity": "INVOICE",
+      "schema":"PAYMENT_METHOD",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 6,
+    "fields": {
+      "name": "Gotówka",
+      "type": "MONEY",
+      "parrent": 0,
+      "entity": "INVOICE",
+      "schema":"PAYMENT_METHOD",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 7,
+    "fields": {
+      "name": "Manufacturer",
+      "type": "MANU",
+      "parrent": 0,
+      "entity": "ORGANIZATION",
+      "schema":"TYPE",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 8,
+    "fields": {
+      "name": "Dealer",
+      "type": "DEAL",
+      "parrent": 0,
+      "entity": "ORGANIZATION",
+      "schema":"TYPE",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 9,
+    "fields": {
+      "name": "Car",
+      "type": "CAR",
+      "parrent": 0,
+      "entity": "MATERIAL",
+      "schema":"GROUP",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 10,
+    "fields": {
+      "name": "Sale",
+      "type": "SALE",
+      "parrent": 0,
+      "entity": "INVOICE",
+      "schema":"TYPE",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "invoice.code",
+    "pk": 11,
+    "fields": {
+      "name": "Buy",
+      "type": "BUY",
+      "parrent": 0,
+      "entity": "INVOICE",
+      "schema":"TYPE",
+      "created": "2017-03-01T00:00:00+00:00",
+      "updated": "2017-03-01T00:00:00+00:00"
+    }
+  }
+]
