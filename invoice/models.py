@@ -262,6 +262,12 @@ class Invoice_Service (models.Model):
         verbose_name = 'Invoice Service'
         verbose_name_plural = 'Invoice Services'
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            self.quantity = self.quantity.aggregate(Sum('quantity'))['quantity__sum'] or 0
+            self.service = self.service.count()
+        return super(Invoice_Service, self).save(*args, **kwargs)
+
 class Invoice_Material (models.Model):
     id = models.AutoField(primary_key=True)
     invoice = models.ForeignKey(Invoice)

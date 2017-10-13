@@ -32,6 +32,11 @@ import math
 from django.contrib.auth.mixins import LoginRequiredMixin
 from invoice.val2text import *
 
+import logging
+l = logging.getLogger('django.db.backends')
+l.setLevel(logging.DEBUG)
+l.addHandler(logging.StreamHandler())
+
 class RedirectView(View):
     def get(self, request):
         return render(request, 'dashboard.html')
@@ -67,6 +72,7 @@ class InvoicePrintView(LoginRequiredMixin, View):
                                                                    (F('service__unit_price') * F('quantity'))+(F('service__unit_price') * F('quantity'))*F('service__tax__value')/100, output_field=FloatField()
                                                                )
 															   )
+
         invoicem_material = Invoice_Material.objects.filter(invoice_id=id).annotate(service_name=F('material__name')
 		                                                       ,price_per_hour=ExpressionWrapper( F('material__price'), output_field=FloatField() )
 															   ,value=ExpressionWrapper(F('material__price') * F('quantity'), output_field=FloatField())
@@ -74,7 +80,8 @@ class InvoicePrintView(LoginRequiredMixin, View):
                                                                ,tax_prct=F('material__tax__value')
 															   ,gross_value=ExpressionWrapper(
                                                                     (F('material__price') * F('quantity'))+(F('material__price') * F('quantity'))*F('material__tax__value')/100, output_field=FloatField()
-															   ))
+															   )
+                                                               )
         invoice_detail_object = chain(invoicem_material, invoicem_service)
         invoice_service_total = Invoice_Service.objects.filter(invoice_id=id).aggregate(
             total_tax=Sum(
