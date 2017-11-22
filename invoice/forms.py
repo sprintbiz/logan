@@ -120,7 +120,8 @@ class OrganizationForm(forms.ModelForm):
                 (-1, "N/A"),
                 )
     name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-name', }))
-    address = forms.ModelChoiceField(required =False, label='Address', widget= forms.Select(attrs={'class': 'select','id':'organization-code', }), queryset=Address.objects.all() )
+    main_address = forms.ModelChoiceField(required =False, label='Main Address', widget= forms.Select(attrs={'class': 'select','id':'organization-main-address', }), queryset=Address.objects.filter(address_type=1) )
+    additional_address = forms.ModelChoiceField(required =False, label='Additional Address', widget= forms.Select(attrs={'class': 'select','id':'organization-additional-address', }), queryset=Address.objects.filter(address_type=2) )
     phone = forms.CharField(required =False, label='Phone', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-phone', }))
     email = forms.CharField(required =False, label='Email', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-email', }))
     org_nbr_1 = forms.CharField(required =False, label='NIP', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-org-nbr-1', }))
@@ -131,7 +132,7 @@ class OrganizationForm(forms.ModelForm):
     is_manufacturer = forms.NullBooleanField(required =False, widget= forms.CheckboxInput(attrs={'class': 'checkbox','id':'is_manufacturer', }))
     class Meta:
         model = Organization
-        fields = ['name','address','phone','email','org_nbr_1','org_nbr_2','is_owner','is_customer','is_dealer','is_manufacturer']
+        fields = ['name','main_address','additional_address', 'phone','email','org_nbr_1','org_nbr_2','is_owner','is_customer','is_dealer','is_manufacturer']
 
 class AddressForm(forms.ModelForm):
 
@@ -153,7 +154,7 @@ class AddressForm(forms.ModelForm):
 
     class Meta:
         model = Address
-        fields = ['name','address_type','street_name','street_number','zip_code','city','country','phone','email','add_code1','add_code2','add_code3','add_code4']
+        fields = ['name','address_type', 'street_name','street_number','zip_code','city','country','phone','email','add_code1','add_code2','add_code3','add_code4']
 
 class ProjectForm(forms.ModelForm):
     name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'project-name', }))

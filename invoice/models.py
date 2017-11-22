@@ -77,7 +77,8 @@ class Address (models.Model):
 class Organization (models.Model):
 
     id = models.AutoField(primary_key=True)
-    address = models.ForeignKey(Address)
+    main_address = models.ForeignKey(Address, related_name='main_address')
+    additional_address = models.ForeignKey(Address, related_name='additional_address', null=True)
     name = models.CharField(max_length=200)
     phone = models.CharField(max_length=15, blank=True)
     email = models.CharField(max_length=200, blank=True)

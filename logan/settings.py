@@ -85,10 +85,12 @@ WSGI_APPLICATION = 'logan.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'logan',
-        'USER': 'root',
-        'PASSWORD': 'oracle',
+        'ENGINE': 'sql_server.pyodbc',
+        'NAME': 'dev',
+        'HOST': 'psw.database.windows.net',
+        'PORT': '',
+        'USER': 'pawel@psw.database.windows.net',
+        'PASSWORD': 'Start!23',
     }
 }
 
