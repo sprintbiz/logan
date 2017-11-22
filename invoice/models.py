@@ -54,13 +54,6 @@ class Address (models.Model):
     zip_code = models.CharField(max_length=60, blank=True)
     city = models.CharField(max_length=200, blank=True)
     country = models.CharField(max_length=200, blank=True)
-    phone = models.CharField(max_length=15, blank=True)
-    email = models.CharField(max_length=200, blank=True)
-    bank_account = models.CharField(max_length=40, blank=True)
-    add_code1 = models.CharField(max_length=100, blank=True)
-    add_code2 = models.CharField(max_length=100, blank=True)
-    add_code3 = models.CharField(max_length=100, blank=True)
-    add_code4 = models.CharField(max_length=100, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -263,11 +256,7 @@ class Invoice_Service (models.Model):
         verbose_name = 'Invoice Service'
         verbose_name_plural = 'Invoice Services'
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            self.quantity = self.quantity.aggregate(Sum('quantity'))['quantity__sum'] or 0
-            self.service = self.service.count()
-        return super(Invoice_Service, self).save(*args, **kwargs)
+
 
 class Invoice_Material (models.Model):
     id = models.AutoField(primary_key=True)

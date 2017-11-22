@@ -145,16 +145,10 @@ class AddressForm(forms.ModelForm):
     zip_code = forms.CharField(required =False, label='Zip Code', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-zip-code', }))
     city = forms.CharField(required =False, label='City', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-city', }))
     country = forms.CharField(required =False, label='Country', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-country', }))
-    phone = forms.CharField(required =False, label='Phone', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-phone', }))
-    email = forms.CharField(required =False, label='Email', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-email', }))
-    add_code1 = forms.CharField(required =False, label='PESEL', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-additional-code1', }))
-    add_code2 = forms.CharField(required =False, label='NIP', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-additional-code2', }))
-    add_code3 = forms.CharField(required =False, label='REGON', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-additional-code3', }))
-    add_code4 = forms.CharField(required =False, label='KRS', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-additional-code4', }))
 
     class Meta:
         model = Address
-        fields = ['name','address_type', 'street_name','street_number','zip_code','city','country','phone','email','add_code1','add_code2','add_code3','add_code4']
+        fields = ['name','address_type', 'street_name','street_number','zip_code','city','country']
 
 class ProjectForm(forms.ModelForm):
     name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'project-name', }))
