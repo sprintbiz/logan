@@ -87,10 +87,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'sql_server.pyodbc',
         'NAME': 'dev',
-        'HOST': 'psw.database.windows.net',
+        'HOST': '',
         'PORT': '',
-        'USER': 'pawel@psw.database.windows.net',
-        'PASSWORD': 'Start!23',
+        'USER': '',
+        'PASSWORD': '',
     }
 }
 
