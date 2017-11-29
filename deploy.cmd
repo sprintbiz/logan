@@ -2,7 +2,7 @@
 
 :: ----------------------
 :: KUDU Deployment Script
-:: Version: 1.0.8
+:: Version: 1.0.6
 :: ----------------------
 
 :: Prerequisites
@@ -52,32 +52,6 @@ goto Deployment
 :: Utility Functions
 :: -----------------
 
-:SelectPythonVersion
-
-IF DEFINED KUDU_SELECT_PYTHON_VERSION_CMD (
-  call %KUDU_SELECT_PYTHON_VERSION_CMD% "%DEPLOYMENT_SOURCE%" "%DEPLOYMENT_TARGET%" "%DEPLOYMENT_TEMP%"
-  IF !ERRORLEVEL! NEQ 0 goto error
-
-  SET /P PYTHON_RUNTIME=<"%DEPLOYMENT_TEMP%\__PYTHON_RUNTIME.tmp"
-  IF !ERRORLEVEL! NEQ 0 goto error
-
-  SET /P PYTHON_VER=<"%DEPLOYMENT_TEMP%\__PYTHON_VER.tmp"
-  IF !ERRORLEVEL! NEQ 0 goto error
-
-  SET /P PYTHON_EXE=<"%DEPLOYMENT_TEMP%\__PYTHON_EXE.tmp"
-  IF !ERRORLEVEL! NEQ 0 goto error
-
-  SET /P PYTHON_ENV_MODULE=<"%DEPLOYMENT_TEMP%\__PYTHON_ENV_MODULE.tmp"
-  IF !ERRORLEVEL! NEQ 0 goto error
-) ELSE (
-  SET PYTHON_RUNTIME=python-2.7
-  SET PYTHON_VER=2.7
-  SET PYTHON_EXE=%SYSTEMDRIVE%\python27\python.exe
-  SET PYTHON_ENV_MODULE=virtualenv
-)
-
-goto :EOF
-
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
 :: ----------
@@ -92,21 +66,37 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 )
 
 IF NOT EXIST "%DEPLOYMENT_TARGET%\requirements.txt" goto postPython
-IF EXIST "%DEPLOYMENT_TARGET%\.skipPythonDeployment" goto postPython
+echo Detected requirements.txt.
 
-echo Detected requirements.txt. RUNNING CUSTOM DEPLOYMENT
+pushd "%DEPLOYMENT_TARGET%"
 
-:: 2. Install packages
+
+:: 2. Create virtual environment
+ IF NOT EXIST "%DEPLOYMENT_TARGET%\env" (
+   echo Creating %PYTHON_RUNTIME% virtual environment.
+   D:\home\Python34\python.exe -m pip install virtualenv
+   D:\home\Python34\python.exe -m virtualenv env
+   IF !ERRORLEVEL! NEQ 0 goto error
+ ) ELSE (
+   echo Found compatible virtual environment.
+ )
+
+
+:: 3. Install packages
 echo Pip install requirements.
-D:\home\site\wwwroot\env\Scripts\python.exe -m pip install --upgrade -r requirements.txt
+env\Scripts\python.exe -m pip install --upgrade -r requirements.txt
 IF !ERRORLEVEL! NEQ 0 goto error
-
 
 popd
 
 :postPython
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:: Post deployment stub
+IF DEFINED POST_DEPLOYMENT_ACTION call "%POST_DEPLOYMENT_ACTION%"
+IF !ERRORLEVEL! NEQ 0 goto error
+
 goto end
 
 :: Execute command routine that will echo out when error
