@@ -7,3 +7,4 @@ django-tables2==1.14.2
 mysql-connector==2.1.4
 pyodbc==4.0.21
 pytz==2017.3
+waitress==1.1.0
