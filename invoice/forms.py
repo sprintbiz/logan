@@ -82,7 +82,7 @@ class MaterialForm(forms.ModelForm):
     name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'material-name', }))
     unit = forms.ModelChoiceField(queryset = Unit.objects.all() , label='Unit', widget= forms.Select(attrs={'class': 'select','id':'material-unit', }))
     tax = forms.ModelChoiceField(queryset = Tax.objects.all() , label='Tax', widget= forms.Select(attrs={'class': 'select','id':'material-tax', }))
-    group = forms.ModelChoiceField(queryset = Material_Group.objects.all().exclude(parrent__isnull=True) , label='Group', widget= forms.Select(attrs={'class': 'select','id':'material-group', }))
+    group = forms.ModelChoiceField(required =False, queryset = Material_Group.objects.all().exclude(parrent__isnull=True) , label='Group', widget= forms.Select(attrs={'class': 'select','id':'material-group', }))
     manufacturer = forms.ModelChoiceField(required =False, queryset = Manufacturer.objects.all() , label='Manufacturer', widget= forms.Select(attrs={'class': 'select','id':'material-manufacturer', }))
     dealer = forms.ModelChoiceField(required =False, queryset = Organization.objects.filter(is_dealer=1) , label='Dealer', widget= forms.Select(attrs={'class': 'select','id':'material-dealer', }))
     price = forms.DecimalField(required =False, label='Price', widget= forms.NumberInput(attrs={'class': 'form-control','id':'material-price', }))
@@ -126,13 +126,14 @@ class OrganizationForm(forms.ModelForm):
     email = forms.CharField(required =False, label='Email', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-email', }))
     org_nbr_1 = forms.CharField(required =False, label='NIP', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-org-nbr-1', }))
     org_nbr_2 = forms.CharField(required =False, label='REGON', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-org-nbr-2', }))
+    org_nbr_3 = forms.CharField(required =False, label='PESEL', widget= forms.TextInput(attrs={'class': 'form-control','id':'organization-org-nbr-3', }))
     is_owner =  forms.NullBooleanField(required =False, widget= forms.CheckboxInput(attrs={'class': 'checkbox','id':'is_owner', }))
     is_customer = forms.NullBooleanField(required =False, widget= forms.CheckboxInput(attrs={'class': 'checkbox'}))
     is_dealer = forms.NullBooleanField(required =False, widget= forms.CheckboxInput(attrs={'class': 'checkbox','id':'is_dealer', }))
     is_manufacturer = forms.NullBooleanField(required =False, widget= forms.CheckboxInput(attrs={'class': 'checkbox','id':'is_manufacturer', }))
     class Meta:
         model = Organization
-        fields = ['name','main_address','additional_address', 'phone','email','org_nbr_1','org_nbr_2','is_owner','is_customer','is_dealer','is_manufacturer']
+        fields = ['name','main_address','additional_address', 'phone','email','org_nbr_1','org_nbr_2','org_nbr_3','is_owner','is_customer','is_dealer','is_manufacturer']
 
 class AddressForm(forms.ModelForm):
 

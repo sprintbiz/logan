@@ -246,7 +246,7 @@ class CreateInvoiceView(LoginRequiredMixin, CreateView):
         invoice_material_form.instance = self.object
         materials = invoice_material_form.save(commit=False)
         for material in materials:
-            transaction = Material_Transactions(user = self.request.user ,warehouse = material.warehouse, material = material.material, units = material.item, invoice = id)
+            transaction = Material_Transactions(user = self.request.user ,warehouse = material.warehouse, material = material.material, units = material.quantity, invoice = id)
             transaction.save()
         invoice_material_form.save()
         invoice_service_form.instance = self.object
