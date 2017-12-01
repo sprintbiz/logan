@@ -162,13 +162,14 @@ class ProjectForm(forms.ModelForm):
 
 class ServiceForm(forms.ModelForm):
     name = forms.CharField(required =True, label='Name', widget= forms.TextInput(attrs={'class': 'form-control','id':'service-name', }))
+    version = forms.CharField(required =False, label='Version', widget= forms.TextInput(attrs={'class': 'form-control','id':'service-version', }))
     tax = forms.ModelChoiceField(queryset = Tax.objects.all() , label='Tax', widget= forms.Select(attrs={'class': 'form-control','id':'service-tax', }))
     unit = forms.ModelChoiceField(queryset = Unit.objects.all() , label='Unit', widget= forms.Select(attrs={'class': 'form-control','id':'service-unit', }))
     unit_price = forms.DecimalField(required =False, label='Unit Price', widget= forms.TextInput(attrs={'class': 'form-control','id':'service-unit-price', }))
 
     class Meta:
         model = Service
-        fields = ['name','tax','unit','unit_price']
+        fields = ['name','version','tax','unit','unit_price']
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Email', 'aria-describedby' : 'basic-addon1'}))

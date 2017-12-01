@@ -229,6 +229,7 @@ class Service (models.Model):
     id = models.AutoField(primary_key=True)
     tax = models.ForeignKey(Tax, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+    version = models.CharField(max_length=50, blank=True, null=True)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     unit_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -239,7 +240,11 @@ class Service (models.Model):
         verbose_name_plural = 'Service'
 
     def __str__(self):
-        return self.name
+        if self.version:
+            ver = 'ver.' + str(self.version)
+        else:
+            ver = '#' + str(self.id)
+        return "%s %s" % ( self.name, ver )
 
     def get_absolute_url(self):
         return reverse('service-edit', kwargs={'pk': self.id})
